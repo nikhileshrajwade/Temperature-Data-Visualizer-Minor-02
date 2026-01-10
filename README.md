@@ -1,4 +1,4 @@
-# Temperature Data Analysis
+# Temperature Data Visualizer
 
 ## Description
 This project analyzes daily temperature data using Python.  
