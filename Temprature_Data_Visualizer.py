@@ -1,46 +1,83 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
-# Read temperature data
-df = pd.read_csv("Data.csv")
+# --------------------------------------------------
+# 1. LOAD DATA
+# --------------------------------------------------
+df = pd.read_csv("Temperature Avg.csv")
 
 # Convert Date column to datetime
 df["Date"] = pd.to_datetime(df["Date"])
 
-print("\nDaily Temperature Data:\n")
+print("\nRaw Climate Data:\n")
 print(df.head())
 
+# 2. FILTER DATA FOR ONE CITY (IMPORTANT)
+
+cities = ['Ahmedabad', 'Bengaluru', 'Bhopal', 'Chennai', 'Delhi', 'Hyderabad', 'Jaipur', 'Kolkata', 'Lucknow', 'Mumbai']
+city = input(f""" Enter a City from the Below List:
+{cities}: """)
+if city == "" or city not in cities:
+    print("!!! INVALID ENTRY !!!")
+    exit()
+
+city_name = city
+city_df = df[df["City"] == city_name].copy()
+
 # Set Date as index
-df.set_index("Date", inplace=True)
+city_df.set_index("Date", inplace=True)
 
-# Calculate weekly and monthly averages
-weekly_avg = df.resample("W").mean()
-monthly_avg = df.resample("M").mean()
+# --------------------------------------------------
+# 3. DAILY, WEEKLY, MONTHLY AVERAGES
+# --------------------------------------------------
+daily_temp = city_df["Temperature_Avg (°C)"]
 
-print("\nWeekly Average Temperature:\n", weekly_avg)
-print("\nMonthly Average Temperature:\n", monthly_avg)
+weekly_avg = daily_temp.resample("W").mean()
+monthly_avg = daily_temp.resample("M").mean()
 
-# Plot daily temperature variation
-plt.figure(figsize=(15, 5))
-plt.plot(df.index, df["Temperature"].values, marker = "o")
-plt.title("Daily Temperature Variation")
+print("\nWeekly Average Temperature:\n", weekly_avg.head())
+print("\nMonthly Average Temperature:\n", monthly_avg.head())
+
+# --------------------------------------------------
+# 4. PLOTTING USING SUBPLOTS (ALL AT ONCE)
+# --------------------------------------------------
+plt.figure(figsize=(14, 10))
+plt.suptitle(
+    f"Temperature Analysis for {city_name}",
+    fontsize=16,
+    fontweight="bold"
+)
+
+# ---------------- Daily Temperature ----------------
+plt.subplot(2, 2, 1)
+plt.plot(daily_temp.index, daily_temp.values)
+plt.title("Daily Average Temperature")
 plt.xlabel("Date")
 plt.ylabel("Temperature (°C)")
-plt.show()
 
-# Plot weekly average temperature
-plt.figure(figsize=(15, 5))
-plt.plot(weekly_avg.index, weekly_avg["Temperature"].values, marker = "o")
+# ---------------- Weekly Average ----------------
+plt.subplot(2, 2, 2)
+plt.plot(weekly_avg.index, weekly_avg.values, marker="o")
 plt.title("Weekly Average Temperature")
 plt.xlabel("Week")
-plt.ylabel("Average Temperature (°C)")
-plt.show()
+plt.ylabel("Temperature (°C)")
 
-# Plot monthly average temperature
-plt.figure(figsize=(15, 5))
-plt.plot(monthly_avg.index, monthly_avg["Temperature"].values, marker = "o")
+# ---------------- Monthly Average ----------------
+plt.subplot(2, 2, 3)
+plt.plot(monthly_avg.index, monthly_avg.values, marker="o")
 plt.title("Monthly Average Temperature")
 plt.xlabel("Month")
-plt.ylabel("Average Temperature (°C)")
+plt.ylabel("Temperature (°C)")
+
+# Daily temperature range (Max - Min)
+daily_range = (
+    city_df["Temperature_Max (°C)"] -
+    city_df["Temperature_Min (°C)"]
+)
+plt.subplot(2, 2, 4)
+plt.plot(daily_range.index, daily_range.values, color="orange")
+plt.title("Daily Temperature Range (Max − Min)")
+plt.xlabel("Date")
+plt.ylabel("Range (°C)")
+plt.tight_layout()
 plt.show()
