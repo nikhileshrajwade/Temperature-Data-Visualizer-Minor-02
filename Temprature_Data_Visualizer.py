@@ -1,9 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# --------------------------------------------------
-# 1. LOAD DATA
-# --------------------------------------------------
+
+# LOAD DATA
 df = pd.read_csv("Temperature Avg.csv")
 
 # Convert Date column to datetime
@@ -12,7 +11,7 @@ df["Date"] = pd.to_datetime(df["Date"])
 print("\nRaw Climate Data:\n")
 print(df.head())
 
-# 2. FILTER DATA FOR ONE CITY (IMPORTANT)
+# FILTER DATA FOR ONE CITY
 
 cities = ['Ahmedabad', 'Bengaluru', 'Bhopal', 'Chennai', 'Delhi', 'Hyderabad', 'Jaipur', 'Kolkata', 'Lucknow', 'Mumbai']
 city = input(f""" Enter a City from the Below List:
@@ -27,9 +26,7 @@ city_df = df[df["City"] == city_name].copy()
 # Set Date as index
 city_df.set_index("Date", inplace=True)
 
-# --------------------------------------------------
-# 3. DAILY, WEEKLY, MONTHLY AVERAGES
-# --------------------------------------------------
+# DAILY, WEEKLY, MONTHLY AVERAGES
 daily_temp = city_df["Temperature_Avg (°C)"]
 
 weekly_avg = daily_temp.resample("W").mean()
@@ -38,9 +35,7 @@ monthly_avg = daily_temp.resample("M").mean()
 print("\nWeekly Average Temperature:\n", weekly_avg.head())
 print("\nMonthly Average Temperature:\n", monthly_avg.head())
 
-# --------------------------------------------------
-# 4. PLOTTING USING SUBPLOTS (ALL AT ONCE)
-# --------------------------------------------------
+# PLOTTING USING SUBPLOTS (ALL AT ONCE)
 plt.figure(figsize=(14, 10))
 plt.suptitle(
     f"Temperature Analysis for {city_name}",
