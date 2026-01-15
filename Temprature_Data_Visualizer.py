@@ -1,8 +1,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+<<<<<<< HEAD
 
 # LOAD DATA
+=======
+# 1. LOAD DATA
+
+>>>>>>> ae56dd79f7d21473507de1e86fa0e1f6ba44b203
 df = pd.read_csv("Temperature Avg.csv")
 
 # Convert Date column to datetime
@@ -27,6 +32,10 @@ city_df = df[df["City"] == city_name].copy()
 city_df.set_index("Date", inplace=True)
 
 # DAILY, WEEKLY, MONTHLY AVERAGES
+<<<<<<< HEAD
+=======
+
+>>>>>>> ae56dd79f7d21473507de1e86fa0e1f6ba44b203
 daily_temp = city_df["Temperature_Avg (°C)"]
 
 weekly_avg = daily_temp.resample("W").mean()
@@ -35,7 +44,12 @@ monthly_avg = daily_temp.resample("M").mean()
 print("\nWeekly Average Temperature:\n", weekly_avg.head())
 print("\nMonthly Average Temperature:\n", monthly_avg.head())
 
+<<<<<<< HEAD
 # PLOTTING USING SUBPLOTS (ALL AT ONCE)
+=======
+#PLOTTING
+
+>>>>>>> ae56dd79f7d21473507de1e86fa0e1f6ba44b203
 plt.figure(figsize=(14, 10))
 plt.suptitle(
     f"Temperature Analysis for {city_name}",
